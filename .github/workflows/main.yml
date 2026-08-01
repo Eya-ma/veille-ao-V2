@@ -1,8 +1,8 @@
 name: Veille AO automatique
 
 on:
-  schedule:
-    - cron: '0 17 * * 1-5'
+ # schedule:
+  #  - cron: '0 17 * * 1-5'
   workflow_dispatch:
 
 jobs:
