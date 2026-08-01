@@ -1,0 +1,28 @@
+# Identifiants et mots de passe
+.env
+
+# Historique et données
+resultats_veille.json
+veille_ao_resultats.xlsx
+
+# Logs
+veille_ao.log
+
+# PDFs téléchargés
+pdfs_globaltenders/
+
+# Fichiers de debug
+debug_*.html
+debug_*.png
+gt_*.html
+gt_cookies.json
+sortie_j360.txt
+
+# Cache Python
+__pycache__/
+*.pyc
+*.pyo
+
+# fichiers temporaires
+*.tmp
+*.bak

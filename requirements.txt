@@ -1,0 +1,9 @@
+requests
+beautifulsoup4
+lxml
+openpyxl
+schedule
+PyMuPDF
+playwright
+sentence-transformers
+python-dotenv
