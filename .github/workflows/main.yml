@@ -1,0 +1,53 @@
+name: Veille AO automatique
+
+on:
+  schedule:
+    - cron: '0 17 * * 1-5'
+  workflow_dispatch:
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: Installer Playwright
+        run: playwright install chromium --with-deps
+
+      - name: Créer le fichier .env
+        run: |
+          echo "EMAIL_FROM=${{ secrets.EMAIL_FROM }}" >> .env
+          echo "EMAIL_PASSWORD=${{ secrets.EMAIL_PASSWORD }}" >> .env
+          echo "EMAIL_TO=${{ secrets.EMAIL_TO }}" >> .env
+          echo "TUNISURF_EMAIL=${{ secrets.TUNISURF_EMAIL }}" >> .env
+          echo "TUNISURF_PASSWORD=${{ secrets.TUNISURF_PASSWORD }}" >> .env
+          echo "GLOBALTENDERS_EMAIL=${{ secrets.GLOBALTENDERS_EMAIL }}" >> .env
+          echo "GLOBALTENDERS_PASSWORD=${{ secrets.GLOBALTENDERS_PASSWORD }}" >> .env
+          echo "J360_EMAIL=${{ secrets.J360_EMAIL }}" >> .env
+          echo "J360_PASSWORD=${{ secrets.J360_PASSWORD }}" >> .env
+
+      - name: Restaurer l'historique
+        uses: actions/cache@v4
+        with:
+          path: resultats_veille.json
+          key: historique-${{ github.run_id }}
+          restore-keys: historique-
+
+      - name: Lancer la veille
+        run: python main.py
+
+      - name: Sauvegarder l'historique
+        uses: actions/cache@v4
+        with:
+          path: resultats_veille.json
+          key: historique-${{ github.run_id }}
