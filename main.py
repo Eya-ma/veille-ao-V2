@@ -181,7 +181,7 @@ def main():
 
 
     envoyer_email(nouveaux, mode_test=mode_test)
-    notifier_teams(nouveaux, mode_test=mode_test)
+    #notifier_teams(nouveaux, mode_test=mode_test)
 
     print(f"\nHistorique : {len(historique)} entrees")
     print(f"Excel      : {CONFIG['excel_file']} (cumulatif, jamais reinitialise)")
