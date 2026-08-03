@@ -240,6 +240,8 @@ _RE_TYPES_REJETES = re.compile(
     r"|avis\s+[a]\s+manifestation"
     r"|compl[e]mentaire\s+de\s+la\s+base\s+de\s+donn[e]es"
     r"|base\s+de\s+donn[e]es\s+des\s+prestataires"
+    r"|communiqu[e]\s*n[o]"
+    r"|rectificatif"
     r")",
     re.IGNORECASE,
 )
