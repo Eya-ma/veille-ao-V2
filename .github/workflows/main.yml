@@ -1,7 +1,5 @@
 name: Veille AO automatique
 on:
- # schedule:
-  #  - cron: '0 17 * * 1-5'
   workflow_dispatch:
 jobs:
   veille:
@@ -9,14 +7,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Installer les dépendances
         run: pip install -r requirements.txt
+
       - name: Installer Playwright
         run: playwright install chromium --with-deps
+
       - name: Créer le fichier .env
         run: |
           echo "EMAIL_FROM=${{ secrets.EMAIL_FROM }}" >> .env
@@ -28,30 +30,20 @@ jobs:
           echo "GLOBALTENDERS_PASSWORD=${{ secrets.GLOBALTENDERS_PASSWORD }}" >> .env
           echo "J360_EMAIL=${{ secrets.J360_EMAIL }}" >> .env
           echo "J360_PASSWORD=${{ secrets.J360_PASSWORD }}" >> .env
-      - name: Restaurer l'historique
-        uses: actions/cache@v4
-        with:
-          path: resultats_veille.json
-          key: historique-${{ github.run_id }}
-          restore-keys: historique-
+          echo "SHAREPOINT_CLIENT_ID=${{ secrets.SHAREPOINT_CLIENT_ID }}" >> .env
+          echo "SHAREPOINT_CLIENT_SECRET=${{ secrets.SHAREPOINT_CLIENT_SECRET }}" >> .env
+          echo "SHAREPOINT_TENANT_ID=${{ secrets.SHAREPOINT_TENANT_ID }}" >> .env
+          echo "SHAREPOINT_SITE_ID=${{ secrets.SHAREPOINT_SITE_ID }}" >> .env
+          echo "TEAMS_WEBHOOK_URL=${{ secrets.TEAMS_WEBHOOK_URL }}" >> .env
+
       - name: Télécharger depuis SharePoint
-        env:
-          SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
-          SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
-          SHAREPOINT_TENANT_ID: ${{ secrets.SHAREPOINT_TENANT_ID }}
-          SHAREPOINT_SITE_ID: ${{ secrets.SHAREPOINT_SITE_ID }}
         run: python telecharger_depuis_sharepoint.py
+
       - name: Lancer la veille
         run: python main.py
+
       - name: Uploader vers SharePoint
-        env:
-          SHAREPOINT_CLIENT_ID: ${{ secrets.SHAREPOINT_CLIENT_ID }}
-          SHAREPOINT_CLIENT_SECRET: ${{ secrets.SHAREPOINT_CLIENT_SECRET }}
-          SHAREPOINT_TENANT_ID: ${{ secrets.SHAREPOINT_TENANT_ID }}
-          SHAREPOINT_SITE_ID: ${{ secrets.SHAREPOINT_SITE_ID }}
         run: python uploader_vers_sharepoint.py
-      - name: Sauvegarder l'historique
-        uses: actions/cache@v4
-        with:
-          path: resultats_veille.json
-          key: historique-${{ github.run_id }}
+
+      - name: Notifier Teams
+        run: python lancer_notification_teams.py
