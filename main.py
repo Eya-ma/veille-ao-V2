@@ -181,7 +181,10 @@ def main():
 
 
     envoyer_email(nouveaux, mode_test=mode_test)
-    #notifier_teams(nouveaux, mode_test=mode_test)
+
+    import json
+    with open("nouveaux_ao_dernier_run.json", "w", encoding="utf-8") as f:
+        json.dump(nouveaux, f, ensure_ascii=False)
 
     print(f"\nHistorique : {len(historique)} entrees")
     print(f"Excel      : {CONFIG['excel_file']} (cumulatif, jamais reinitialise)")

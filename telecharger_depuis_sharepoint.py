@@ -4,7 +4,7 @@ from sharepoint_auth import obtenir_token
 
 SITE_ID     = os.environ["SHAREPOINT_SITE_ID"]
 CHEMIN_FICHIER = "Veille AO/veille_ao_resultats.xlsx"  # chemin relatif dans la bibliotheque "Documents"
-CHEMIN_LOCAL   = "resultats_veille.xlsx"  # adapte au nom que main.py attend en local
+CHEMIN_LOCAL   = "veille_ao_resultats.xlsx"  # adapte au nom que main.py attend en local
 
 def telecharger():
     token = obtenir_token()

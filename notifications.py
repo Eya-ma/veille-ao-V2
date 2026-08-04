@@ -141,15 +141,9 @@ def notifier_teams(nouveaux, mode_test=False):
     date_str = datetime.now().strftime("%d/%m/%Y %H:%M")
 
     if not nouveaux:
-        resume = "Aucun appel d'offres detecte."
+        resume = "Aucun nouvel appel d'offres detecte aujourd'hui."
     else:
-        lignes = [
-            f"- [{ao.get('source','')}] {ao.get('titre','')[:100]} (limite: {ao.get('date_limite','N/A')})"
-            for ao in nouveaux[:15]
-        ]
-        resume = "\n\n".join(lignes)
-        if len(nouveaux) > 15:
-            resume += f"\n\n... et {len(nouveaux) - 15} de plus (detail dans l'Excel joint)"
+        resume = "Consultez le detail complet dans le fichier Excel."
 
     excel_path = CONFIG["excel_file"]
     file_content_b64 = ""
@@ -210,6 +204,13 @@ def notifier_teams(nouveaux, mode_test=False):
                             "type": "TextBlock",
                             "text": resume,
                             "wrap": True
+                        }
+                    ],
+                    "actions": [
+                        {
+                            "type": "Action.OpenUrl",
+                            "title": "Ouvrir le fichier Excel (SharePoint)",
+                            "url": "https://steamine.sharepoint.com/:x:/r/sites/Commercial/_layouts/15/Doc.aspx?sourcedoc=%7B302D1A7B-68EB-4B24-AAD3-0E46D28999A2%7D&file=veille_ao_resultats.xlsx&action=default&mobileredirect=true"
                         }
                     ]
                 }

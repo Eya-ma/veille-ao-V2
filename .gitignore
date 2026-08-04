@@ -26,3 +26,7 @@ __pycache__/
 # fichiers temporaires
 *.tmp
 *.bak
+nouveaux_ao_dernier_run.json
+historique.json 
+ 
+ 
