@@ -28,27 +28,18 @@ def _envoyer_un_email(email_from, email_password, email_to, nouveaux, mode_test=
     date_str = datetime.now().strftime("%d/%m/%Y")
     heure_str = datetime.now().strftime("%H:%M")
     tag_test = " [TEST]" if mode_test else ""
-    if len(nouveaux) == 0:
-        libelle_ao = "aucun appel d'offres détecté"
-    elif len(nouveaux) == 1:
-        libelle_ao = "1 appel d'offres détecté"
-    else:
-        libelle_ao = f"{len(nouveaux)} appels d'offres détectés"
+    libelle_ao = "mise à jour de la veille"
     sujet = f"[Enertech] Veille AO — {date_str} {heure_str}{tag_test} : {libelle_ao}"
     log.info(f"[EMAIL] Sujet : {sujet}")
     corps = f"""<html><body style="font-family:Arial,sans-serif;max-width:860px;margin:auto;color:#222;">
   <h2 style="background:#1F4E79;color:white;padding:14px 18px;border-radius:6px;">
     Veille Appels d\'Offres{tag_test} - {datetime.now().strftime('%d/%m/%Y a %H:%M')}
   </h2>"""
-    if nouveaux:
-        corps += (
-            f'<p><b>{len(nouveaux)} appel(s) d\'offres detecte(s)</b> '
-            f'aujourd\'hui.</p>'
-            f'<p>Le detail complet (tous les AO actifs, avec liens) '
-            f'se trouve dans le fichier Excel joint a cet email.</p>'
-        )
-    else:
-        corps += '<div style="background:#f5f5f5;padding:20px;text-align:center;"><p>Aucun appel d\'offres detecte aujourd\'hui.</p></div>'
+    corps += (
+        '<p><b>Mise à jour de la veille des appels d\'offres.</b></p>'
+        '<p>Le detail complet (tous les AO actifs, avec liens) '
+        'se trouve dans le fichier Excel joint a cet email.</p>'
+    )
     corps += (
         '<hr style="border:none;border-top:1px solid #ddd;margin:24px 0;">'
         '<p style="font-size:12px;color:#777;">'
@@ -140,10 +131,7 @@ def notifier_teams(nouveaux, mode_test=False):
     tag_test = " [TEST]" if mode_test else ""
     date_str = datetime.now().strftime("%d/%m/%Y %H:%M")
 
-    if not nouveaux:
-        resume = "Aucun nouvel appel d'offres detecte aujourd'hui."
-    else:
-        resume = "Consultez le detail complet dans le fichier Excel."
+    resume = "Consultez le detail complet dans le fichier Excel."
 
     excel_path = CONFIG["excel_file"]
     file_content_b64 = ""
@@ -161,7 +149,7 @@ def notifier_teams(nouveaux, mode_test=False):
     payload = {
         "type": "message",
         "titre": f"Veille AO{tag_test} - {date_str}",
-        "nombre": len(nouveaux),
+        "nombre": 0,
         "resume": resume,
         "fileName": file_name,
         "fileContent": file_content_b64,
@@ -197,7 +185,7 @@ def notifier_teams(nouveaux, mode_test=False):
                         },
                         {
                             "type": "TextBlock",
-                            "text": f"**{len(nouveaux)} appel(s) d'offres detecte(s)**",
+                            "text": "**Mise a jour de la veille des appels d'offres**",
                             "wrap": True
                         },
                         {
